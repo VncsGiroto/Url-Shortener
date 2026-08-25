@@ -1,0 +1,14 @@
+Scripts/
+Lib/
+Include/
+pyvenv.cfg
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.git/
+.gitignore
+.opencode/
+venv/
+.venv/
+.env

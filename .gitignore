@@ -5,4 +5,6 @@ pycache/
 Include/
 *.pyc
 pyvenv.cfg
+.opencode
+AGENTS.MD
 
