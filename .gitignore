@@ -1,10 +1,10 @@
 # Created by venv; see https://docs.python.org/3/library/venv.html
 Scripts/
 Lib/
-pycache/
+*__pycache__/
 Include/
 *.pyc
 pyvenv.cfg
 .opencode
 AGENTS.MD
-
+.env

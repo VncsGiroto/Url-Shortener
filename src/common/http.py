@@ -1,5 +1,5 @@
 
-class Response:
+class HttpResponse:
     @staticmethod
     def success(data, message, status_code=200):
         response = {
