@@ -1,5 +1,6 @@
 from typing import Optional
 
+from src.captcha.service import CaptchaService
 from src.common.http import HttpResponse
 from src.urls.services import UrlService
 
@@ -7,13 +8,20 @@ from src.urls.services import UrlService
 class UrlController:
     """HTTP mapping over UrlService — orquestra e traduz erros em status (S)."""
 
-    def __init__(self, service: Optional[UrlService] = None):
+    def __init__(
+        self,
+        service: Optional[UrlService] = None,
+        captcha: Optional[CaptchaService] = None,
+    ):
         self.service = service or UrlService()
+        self.captcha = captcha or CaptchaService()
 
     def create_url(self, data):
         try:
             if not data or not data.get("url"):
                 return HttpResponse.error("url is required", 400)
+            if not self.captcha.verify(data.get("captcha_token")):
+                return HttpResponse.error("captcha verification failed", 400)
             url = self.service.create(data["url"])
             return HttpResponse.success(
                 url.to_dict(),

@@ -17,5 +17,7 @@ services:
       FLASK_ENV: production
       DB_HOST: ${DB_HOST:-host.docker.internal}
       DB_PORT: ${DB_PORT:-5432}
+      # Site key é pública; secret vem só do env_file (nunca commitar default)
+      TURNSTILE_SITE_KEY: ${TURNSTILE_SITE_KEY:-0x4AAAAAAEnrWN-FcfhIDg-J}
     extra_hosts:
       - "host.docker.internal:host-gateway"
