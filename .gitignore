@@ -6,6 +6,6 @@ Include/
 *.pyc
 pyvenv.cfg
 .opencode
-AGENTS.MD
 .env
+Problemas.txt
 

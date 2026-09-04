@@ -1,7 +1,9 @@
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
+# src/.env — load_dotenv() sozinho só lê .env do CWD, ignorando este arquivo
+load_dotenv(Path(__file__).resolve().parent / ".env")
 
 
 def _build_database_uri() -> str:

@@ -1,38 +1,21 @@
 services:
-  postgres:
-    image: postgres:16-alpine
-    environment:
-      POSTGRES_DB: ${DB_NAME:-urlshortener}
-      POSTGRES_USER: ${DB_USER:-postgres}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
-    ports:
-      - "5433:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-urlshortener}",
-        ]
-      interval: 5s
-      timeout: 3s
-      retries: 10
-
   url_shortener:
     build: .
     ports:
       - "8000:8000"
+    # Credenciais (DB_USER/DB_PASSWORD/DB_NAME) vêm de src/.env (gitignored).
+    # DB_HOST/DB_PORT ficam em environment (valores de container) pois têm
+    # precedência sobre o env_file — o app monta a URI a partir das partes
+    # (sem DATABASE_URL fixa, que congelaria credenciais erradas).
+    env_file:
+      - src/.env
     environment:
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_NAME: ${DB_NAME:-urlshortener}
-      DB_USER: ${DB_USER:-postgres}
-      DB_PASSWORD: ${DB_PASSWORD:-postgres}
-      DATABASE_URL: postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-postgres}@postgres:5432/${DB_NAME:-urlshortener}
-    depends_on:
-      postgres:
-        condition: service_healthy
-
-volumes:
-  pgdata:
+      # PG 18 nativo do WSL (cluster 18/main, porta 5432).
+      # Do container, o WSL é o gateway da bridge docker0 —
+      # host-gateway resolve para 172.17.0.1 de forma estável.
+      # FLASK_ENV=production: sem isso o container roda DevelopmentConfig (DEBUG).
+      FLASK_ENV: production
+      DB_HOST: ${DB_HOST:-host.docker.internal}
+      DB_PORT: ${DB_PORT:-5432}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

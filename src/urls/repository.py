@@ -8,8 +8,12 @@ class UrlRepository:
     """Persistence for Url — thin wrapper over db.session (S, I)."""
 
     def save(self, url: Url) -> Url:
-        db.session.add(url)
-        db.session.commit()
+        try:
+            db.session.add(url)
+            db.session.commit()
+        except Exception:
+            db.session.rollback()
+            raise
         return url
 
     def get_by_code(self, short_code: str) -> Optional[Url]:
